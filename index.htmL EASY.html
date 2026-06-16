@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="eazy – Finis les frais de rappel de factures en Suisse."/>
+<title>eazy – Finis les frais de rappel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Palette psychologique : vert confiance = sécurité + argent, bleu calme = fiabilité, blanc = clarté */
+  --mint:#00C896;       /* vert émeraude vif : action, argent, énergie positive */
+  --mint-d:#00A87A;     /* vert foncé hover */
+  --mint-glow:rgba(0,200,150,.18);
+  --sky:#4F8EF7;        /* bleu ciel confiance */
+  --sky-d:#3A74DC;
+  --amber:#FF9B3C;      /* orange chaleur, urgence douce */
+  --red:#FF4B4B;        /* rouge perte – uniquement pour les douleurs */
+  --dark:#0B1120;       /* presque noir, premium */
+  --dark2:#1A2540;
+  --mid:#4A5878;
+  --light:#8A96B0;
+  --bg:#F7FAF9;          /* blanc très légèrement menthe – inconscient frais, propre, sain */
+  --surface:#FFFFFF;
+  --surface2:#EEF7F4;    /* surface menthe pâle */
+  --border:#DDE8E3;
+  --border2:#C8DDD6;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--dark);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* ── BARRE LIVE VISITORS ── */
+.live-bar{background:var(--dark);color:#fff;text-align:center;padding:10px 16px;font-size:13px;font-weight:600;letter-spacing:0.2px;position:relative;z-index:300}
+.live-dot{display:inline-block;width:8px;height:8px;background:#00C896;border-radius:50%;margin-right:6px;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,200,150,.5)}50%{box-shadow:0 0 0 6px rgba(0,200,150,0)}}
+
+/* ── NAV ── */
+nav{position:fixed;top:36px;left:0;right:0;z-index:200;background:rgba(247,250,249,0.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:66px;transition:top .3s}
+nav.scrolled{top:0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:38px;height:38px;border-radius:11px;background:var(--dark);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-text{font-size:22px;font-weight:900;color:var(--dark);letter-spacing:-0.5px}
+.nav-cta{background:var(--mint);color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:6px}
+.nav-cta:hover{background:var(--mint-d);transform:translateY(-1px);box-shadow:0 6px 20px var(--mint-glow)}
+.langs{display:flex;gap:2px}
+.lang{background:none;border:1.5px solid transparent;border-radius:9px;padding:5px 11px;font-size:13px;font-weight:700;cursor:pointer;color:var(--light);transition:all .15s;font-family:inherit}
+.lang.on{border-color:var(--mint);color:var(--mint);background:var(--surface2)}
+.nav-right{display:flex;align-items:center;gap:14px}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 90px;
+  background:radial-gradient(ellipse 100% 60% at 50% -5%, rgba(0,200,150,.10) 0%, var(--bg) 65%)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:#FFF5EB;border:1.5px solid #FFD7AB;border-radius:100px;padding:8px 18px;margin-bottom:28px;font-size:13px;font-weight:700;color:#C25A00;animation:fadeUp .5s ease both}
+.hero-h1{font-size:clamp(38px,6.5vw,78px);font-weight:900;line-height:1.04;letter-spacing:-2.5px;color:var(--dark);margin-bottom:12px;animation:fadeUp .5s .07s ease both}
+.hero-h1 .accent{color:var(--mint)}
+.hero-h1 .strike{text-decoration:line-through;color:var(--red);opacity:.6}
+.hero-sub{font-size:clamp(16px,2vw,19px);color:var(--mid);max-width:520px;line-height:1.7;margin-bottom:40px;animation:fadeUp .5s .14s ease both}
+
+/* HERO KEY VALUES */
+.hero-kvs{display:flex;gap:12px;max-width:580px;width:100%;margin-bottom:36px;animation:fadeUp .5s .18s ease both;flex-wrap:wrap;justify-content:center}
+.kv{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:13px 16px;flex:1;min-width:210px;transition:border-color .2s,box-shadow .2s}
+.kv:hover{border-color:var(--mint);box-shadow:0 4px 16px var(--mint-glow)}
+.kv-ico{font-size:22px;flex-shrink:0}
+.kv-title{font-size:14px;font-weight:800;color:var(--dark);margin-bottom:2px}
+.kv-desc{font-size:12px;color:var(--mid);line-height:1.5}
+
+/* PAIN BOX */
+.pain-box{background:var(--dark2);border-radius:22px;padding:28px 36px;max-width:640px;width:100%;animation:fadeUp .5s .22s ease both;border:1px solid rgba(255,255,255,.07)}
+.pain-label{font-size:10px;color:#5A6A8A;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;margin-bottom:18px}
+.pain-row{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0}
+.pstat{text-align:center;padding:0 20px}
+.pstat-num{font-size:32px;font-weight:900;line-height:1;color:#FF6B6B}
+.pstat-num.g{color:var(--mint)}
+.pstat-lbl{font-size:11px;color:#5A6A8A;margin-top:5px}
+.pdiv{width:1px;height:44px;background:rgba(255,255,255,.07);flex-shrink:0}
+.pain-note{font-size:13px;color:#5A6A8A;margin-top:16px;line-height:1.6}
+.pain-note strong{color:#94a3b8}
+
+/* BADGES */
+.badges{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin-top:36px;animation:fadeUp .5s .26s ease both}
+.badge{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--mid);font-weight:600}
+.badge-ico{font-size:18px}
+
+/* SOCIAL PROOF TICKER */
+.ticker{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-flex;gap:48px;animation:ticker 28s linear infinite}
+.ticker-inner:hover{animation-play-state:paused}
+.tick-item{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--mid)}
+.tick-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.tick-amount{color:var(--mint);font-weight:800}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTIONS */
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.sec{padding:88px 24px}
+.eyebrow{font-size:10px;font-weight:700;color:var(--mint);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:12px}
+.sec-h{font-size:clamp(28px,4vw,46px);font-weight:900;letter-spacing:-1.5px;color:var(--dark);margin-bottom:14px;line-height:1.08}
+.sec-s{font-size:17px;color:var(--mid);max-width:500px;line-height:1.65;margin-bottom:52px}
+
+/* STEPS */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+.step{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:28px 24px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.step:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,200,150,.1);border-color:var(--mint)}
+.step-ico{font-size:36px;margin-bottom:16px}
+.step-n{font-size:10px;font-weight:700;color:var(--mint);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+.step-t{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:7px}
+.step-d{font-size:14px;color:var(--mid);line-height:1.65}
+
+/* FEATURES */
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.feat{background:var(--surface);border:1.5px solid var(--border);border-radius:18px;padding:22px;display:flex;gap:14px;align-items:flex-start;transition:border-color .2s,box-shadow .2s}
+.feat:hover{border-color:var(--mint);box-shadow:0 4px 20px var(--mint-glow)}
+.feat-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.feat-t{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:5px}
+.feat-d{font-size:13px;color:var(--mid);line-height:1.6}
+
+/* TESTIMONIALS */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.tcard{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:26px;transition:border-color .2s,box-shadow .2s,transform .2s}
+.tcard:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:0 8px 28px rgba(0,0,0,.07)}
+.stars{color:#FBBF24;font-size:14px;letter-spacing:2px;margin-bottom:12px}
+.ttext{font-size:15px;color:var(--mid);line-height:1.75;margin-bottom:16px}
+.tsaved{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:7px 13px;font-size:13px;font-weight:700;color:#00875A;margin-bottom:16px;display:inline-block}
+.tauthor{display:flex;align-items:center;gap:11px}
+.tavatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;border:2px solid var(--border)}
+.tname{font-weight:700;color:var(--dark);font-size:14px}
+.trole{font-size:12px;color:var(--light);margin-top:1px}
+
+/* TRUST STRIP */
+.trust-strip{background:var(--surface2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px 24px}
+.trust-inner{display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap;max-width:900px;margin:0 auto}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--mid)}
+.trust-item .ti{font-size:18px}
+
+/* SIGNUP FORM */
+.signup-sec{background:linear-gradient(160deg,var(--dark) 0%,var(--dark2) 100%);padding:88px 24px;text-align:center}
+.signup-h{font-size:clamp(26px,4vw,46px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:10px}
+.signup-s{font-size:17px;color:#8A96B0;margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.6}
+.signup-card{background:#fff;border-radius:26px;padding:36px;max-width:480px;margin:0 auto;text-align:left;box-shadow:0 24px 64px rgba(0,0,0,.3)}
+.signup-card-h{font-size:18px;font-weight:800;color:var(--dark);margin-bottom:6px}
+.signup-card-s{font-size:14px;color:var(--light);margin-bottom:20px;line-height:1.55}
+
+/* PROGRESS BAR */
+.progress-wrap{margin-bottom:22px}
+.progress-label{font-size:12px;font-weight:700;color:var(--mint);margin-bottom:7px;display:flex;justify-content:space-between;align-items:center}
+.progress-track{background:#E8F0EE;border-radius:100px;height:6px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--mint),#00E6AC);border-radius:100px;width:0%;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* URGENCY BADGE */
+.urgency-badge{background:#FFF5EB;border:1.5px solid #FFD7AB;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:700;color:#C25A00;margin-bottom:18px;display:flex;align-items:center;gap:8px;width:100%}
+
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.inp{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;font-size:15px;font-family:inherit;color:var(--dark);outline:none;background:var(--bg);transition:border-color .15s,box-shadow .15s}
+.inp:focus{border-color:var(--mint);background:#fff;box-shadow:0 0 0 3px rgba(0,200,150,.12)}
+.inp.s2{grid-column:1/-1}
+.sbtn{width:100%;background:linear-gradient(135deg,var(--mint) 0%,#00B887 100%);color:#fff;border:none;border-radius:13px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;font-family:inherit;box-shadow:0 4px 20px var(--mint-glow);letter-spacing:.2px}
+.sbtn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,200,150,.4)}
+.sbtn:active{transform:translateY(0)}
+.fnote{font-size:12px;color:var(--light);text-align:center;margin-top:11px;line-height:1.6}
+.err{color:#dc2626;font-size:13px;font-weight:600;margin-top:8px;display:none}
+.success{display:none;text-align:center;padding:16px 0}
+.success-ico{font-size:52px;margin-bottom:14px}
+.success-h{font-size:22px;font-weight:900;color:var(--dark);margin-bottom:8px}
+.success-s{font-size:15px;color:var(--mid);line-height:1.6}
+
+/* MINI SOCIAL PROOF UNDER FORM */
+.form-social{display:flex;align-items:center;gap:-8px;margin-top:14px;justify-content:center}
+.fsoc-avatars{display:flex}
+.fsoc-av{width:26px;height:26px;border-radius:50%;border:2px solid #fff;margin-left:-7px;font-size:12px;display:flex;align-items:center;justify-content:center;background:var(--surface2)}
+.fsoc-av:first-child{margin-left:0}
+.fsoc-txt{font-size:12px;color:var(--light);font-weight:600;margin-left:8px}
+
+/* PRICING */
+.pricing-sec{padding:88px 24px;background:var(--bg);text-align:center}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;max-width:1080px;margin:0 auto}
+.pcard{border:1.5px solid var(--border);border-radius:22px;padding:26px;background:var(--surface);position:relative;transition:transform .2s,box-shadow .2s;text-align:left}
+.pcard:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.08)}
+.pcard.pop{border-color:var(--mint);border-width:2px;box-shadow:0 8px 32px var(--mint-glow)}
+.pop-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--mint);color:#fff;font-size:11px;font-weight:800;padding:5px 16px;border-radius:100px;white-space:nowrap;letter-spacing:.3px}
+.p-name{font-size:11px;font-weight:700;color:var(--light);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
+.p-price{font-size:38px;font-weight:900;color:var(--dark);line-height:1}
+.p-price span{font-size:15px;color:var(--mid);font-weight:500}
+.p-limit{font-size:12px;font-weight:700;color:var(--mint);background:var(--surface2);border-radius:8px;padding:4px 10px;display:inline-block;margin:10px 0}
+.p-desc{font-size:13px;color:var(--mid);margin-bottom:18px;line-height:1.55}
+.p-anchor{font-size:12px;font-weight:700;color:var(--red);background:#FFF0F0;border-radius:8px;padding:5px 10px;display:inline-block;margin-bottom:14px}
+.p-feats{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.p-feats li{font-size:13px;color:var(--mid);display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.p-feats li::before{content:"✓";color:var(--mint);font-weight:900;flex-shrink:0;margin-top:1px}
+.p-feats li.star::before{content:"⭐";font-size:12px}
+.pbtn{width:100%;border-radius:11px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+.pbtn.out{background:#fff;border:1.5px solid var(--border);color:var(--dark)}
+.pbtn.out:hover{border-color:var(--mint);color:var(--mint)}
+.pbtn.pri{background:var(--sky);color:#fff}
+.pbtn.pri:hover{background:var(--sky-d);box-shadow:0 6px 20px rgba(79,142,247,.3)}
+.pbtn.grn{background:var(--mint);color:#fff}
+.pbtn.grn:hover{background:var(--mint-d);box-shadow:0 6px 20px var(--mint-glow)}
+.pbtn.pur{background:#7C3AED;color:#fff}
+.pbtn.pur:hover{box-shadow:0 6px 20px rgba(124,58,237,.3)}
+.pbtn.dark{background:var(--dark);color:#fff}
+.pbtn.dark:hover{box-shadow:0 6px 20px rgba(11,17,32,.3)}
+
+/* PAYMENT METHODS */
+.pay-methods{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:36px}
+.pay-badge{background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:10px 18px;display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:var(--mid)}
+.twint-badge{background:#fff;border:2px solid #FF0068;border-radius:11px;padding:10px 18px;display:flex;align-items:center;gap:7px;font-size:14px;font-weight:800;color:#FF0068}
+
+/* CTA FINAL */
+.cta-sec{background:linear-gradient(135deg,var(--mint) 0%,#00A87A 100%);text-align:center;padding:80px 24px}
+.cta-h{font-size:clamp(26px,4vw,48px);font-weight:900;letter-spacing:-1.5px;color:#fff;margin-bottom:12px}
+.cta-s{font-size:17px;color:rgba(255,255,255,.85);margin-bottom:36px;line-height:1.6}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:#fff;color:var(--mint-d);border:none;border-radius:14px;padding:17px 36px;font-size:17px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;box-shadow:0 8px 30px rgba(0,0,0,.15)}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(0,0,0,.2)}
+
+/* JOIN SECTION */
+.join-sec{background:var(--surface);border-top:1px solid var(--border);padding:64px 24px;text-align:center}
+
+/* FOOTER */
+footer{text-align:center;padding:36px 24px;border-top:1px solid var(--border);font-size:13px;color:var(--light);background:var(--bg)}
+footer a{color:var(--light);text-decoration:none}
+footer a:hover{color:var(--mid)}
+
+/* FLOATING CTA mobile */
+.float-cta{display:none;position:fixed;bottom:0;left:0;right:0;z-index:250;background:linear-gradient(135deg,var(--mint),var(--mint-d));color:#fff;font-size:16px;font-weight:800;padding:17px;text-align:center;cursor:pointer;font-family:inherit;border:none;box-shadow:0 -4px 20px rgba(0,200,150,.25)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes countUp{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+
+@media(max-width:640px){
+  nav{padding:0 16px;top:0}
+  nav.scrolled{top:0}
+  .live-bar{font-size:12px;padding:8px 12px}
+  .fgrid{grid-template-columns:1fr}
+  .inp.s2{grid-column:1}
+  .pain-box{padding:20px 14px}
+  .pstat{padding:0 10px}
+  .pdiv{display:none}
+  .sec{padding:60px 16px}
+  .pgrid{grid-template-columns:1fr}
+  .nav-cta{display:none}
+  .float-cta{display:block}
+  body{padding-bottom:60px}
+  .trust-inner{gap:18px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- LIVE VISITORS BAR – preuve sociale immédiate -->
+<div class="live-bar">
+  <span class="live-dot"></span>
+  <span id="live-txt">247 personnes regardent cette page en ce moment</span>
+</div>
+
+<!-- NAV -->
+<nav id="mainnav">
+  <a href="#" class="logo">
+    <div class="logo-icon">
+      <svg width="26" height="26" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="13" cy="14" r="4" fill="#00C896"/>
+        <circle cx="27" cy="14" r="4" fill="#4F8EF7"/>
+        <path d="M10 24 Q20 34 30 24" stroke="#00C896" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <circle cx="32" cy="22" r="2.5" fill="#FF9B3C"/>
+      </svg>
+    </div>
+    <span class="logo-text">eazy</span>
+  </a>
+  <div class="nav-right">
+    <div class="langs">
+      <button class="lang on" onclick="setLang('fr')">FR</button>
+      <button class="lang" onclick="setLang('de')">DE</button>
+      <button class="lang" onclick="setLang('en')">EN</button>
+      <button class="lang" onclick="setLang('it')">IT</button>
+    </div>
+    <button class="nav-cta" onclick="scrollToSignup()"><span data-t="join_btn">Rejoindre gratuitement</span> →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow" data-t="pill">⚠️ En Suisse, un simple oubli de facture peut coûter CHF 10, 20, voire 50 CHF de frais de rappel.</div>
+  <h1 class="hero-h1">
+    <span data-t="h1a">Finis les</span> <span class="strike" data-t="h1b">oublis.</span><br>
+    <span class="accent" data-t="h1c">Garde ton argent.</span>
+  </h1>
+  <p class="hero-sub" data-t="sub">eazy organise toutes tes factures, te rappelle avant les échéances et les archive en sécurité. Moins de stress, plus d'argent dans ta poche.</p>
+
+  <div class="hero-kvs">
+    <div class="kv">
+      <span class="kv-ico">🔔</span>
+      <div>
+        <div class="kv-title" data-t="kv1_t">Rappels automatiques</div>
+        <div class="kv-desc" data-t="kv1_d">7j, 2j et le jour J — jamais de frais de rappel.</div>
+      </div>
+    </div>
+    <div class="kv">
+      <span class="kv-ico">📁</span>
+      <div>
+        <div class="kv-title" data-t="kv2_t">Toutes tes factures stockées</div>
+        <div class="kv-desc" data-t="kv2_d">Retrouve n'importe quelle facture en 2 secondes, même après 5 ans.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pain-box">
+    <div class="pain-label" data-t="plbl">CE QUE TU PERDS PAR AN EN SUISSE À CAUSE DES OUBLIS</div>
+    <div class="pain-row">
+      <div class="pstat"><div class="pstat-num">CHF 10</div><div class="pstat-lbl" data-t="c1">1er rappel</div></div>
+      <div class="pdiv"></div>
+      <div class="pstat"><div class="pstat-num">CHF 30</div><div class="pstat-lbl" data-t="c2">2ème rappel</div></div>
+      <div class="pdiv"></div>
+      <div class="pstat"><div class="pstat-num">CHF 50+</div><div class="pstat-lbl" data-t="c3">3ème rappel</div></div>
+      <div class="pdiv"></div>
+      <div class="pstat"><div class="pstat-num g">CHF 0</div><div class="pstat-lbl" data-t="c4">avec eazy</div></div>
+    </div>
+    <div class="pain-note" data-t="pnote">Avec 3 à 5 oublis par an — tu perds facilement <strong>CHF 100 à 250</strong> pour rien.</div>
+  </div>
+
+  <div class="badges">
+    <div class="badge"><span class="badge-ico">🔔</span><span data-t="b1">Rappels intelligents</span></div>
+    <div class="badge"><span class="badge-ico">📁</span><span data-t="b2">Stockage à vie</span></div>
+    <div class="badge"><span class="badge-ico">💚</span><span data-t="b3">Sérénité au quotidien</span></div>
+  </div>
+</section>
+
+<!-- TICKER – preuve sociale défilante -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner" id="ticker-inner">
+    <span class="tick-item"><span class="tick-avatar" style="background:#EEF7F4">👩</span> Sophie M. vient de rejoindre — <span class="tick-amount">économise CHF 30/an</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#EEF3FF">👨</span> Marco T. vient de rejoindre — <span class="tick-amount">gagne 2h/mois</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#FFF5EB">👩</span> Laura B. vient de rejoindre — <span class="tick-amount">économise CHF 120/an</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#EEF7F4">👨</span> David K. vient de rejoindre — <span class="tick-amount">zéro frais de rappel</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#EEF3FF">👩</span> Anna P. vient de rejoindre — <span class="tick-amount">économise CHF 80/an</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#FFF5EB">👨</span> Luca R. vient de rejoindre — <span class="tick-amount">économise CHF 150/an</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="tick-item"><span class="tick-avatar" style="background:#EEF7F4">👩</span> Sophie M. vient de rejoindre — <span class="tick-amount">économise CHF 30/an</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#EEF3FF">👨</span> Marco T. vient de rejoindre — <span class="tick-amount">gagne 2h/mois</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#FFF5EB">👩</span> Laura B. vient de rejoindre — <span class="tick-amount">économise CHF 120/an</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#EEF7F4">👨</span> David K. vient de rejoindre — <span class="tick-amount">zéro frais de rappel</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#EEF3FF">👩</span> Anna P. vient de rejoindre — <span class="tick-amount">économise CHF 80/an</span></span>
+    <span class="tick-item"><span class="tick-avatar" style="background:#FFF5EB">👨</span> Luca R. vient de rejoindre — <span class="tick-amount">économise CHF 150/an</span></span>
+  </div>
+</div>
+
+<!-- TRUST STRIP -->
+<div class="trust-strip">
+  <div class="trust-inner">
+    <div class="trust-item"><span class="ti">🇨🇭</span> <span>Fait en Suisse</span></div>
+    <div class="trust-item"><span class="ti">🔒</span> <span>Données chiffrées</span></div>
+    <div class="trust-item"><span class="ti">🏦</span> <span>Hébergé en Europe</span></div>
+    <div class="trust-item"><span class="ti">⚡</span> <span>Prêt en 30 secondes</span></div>
+    <div class="trust-item"><span class="ti">✅</span> <span>Sans carte bancaire</span></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="sec" style="background:var(--surface)">
+  <div class="wrap">
+    <div class="eyebrow" data-t="how_ey">COMMENT ÇA MARCHE</div>
+    <h2 class="sec-h" data-t="how_h">Simple comme bonjour.</h2>
+    <p class="sec-s" data-t="how_s">Pas besoin d'être organisé. eazy fait tout pour toi en quelques secondes.</p>
+    <div class="steps">
+      <div class="step"><div class="step-ico">📸</div><div class="step-n" data-t="s1n">Étape 1</div><div class="step-t" data-t="s1t">Tu ajoutes ta facture</div><div class="step-d" data-t="s1d">Prends une photo ou importe ton PDF. En 3 secondes c'est dans l'app.</div></div>
+      <div class="step"><div class="step-ico">🤖</div><div class="step-n" data-t="s2n">Étape 2</div><div class="step-t" data-t="s2t">On l'organise</div><div class="step-d" data-t="s2d">eazy lit les informations et classe tout automatiquement. Rien à saisir.</div></div>
+      <div class="step"><div class="step-ico">🔔</div><div class="step-n" data-t="s3n">Étape 3</div><div class="step-t" data-t="s3t">Tu reçois des rappels</div><div class="step-d" data-t="s3d">7 jours avant, 2 jours avant, le jour J. Plus jamais d'oubli.</div></div>
+      <div class="step"><div class="step-ico">😊</div><div class="step-n" data-t="s4n">Étape 4</div><div class="step-t" data-t="s4t">Tu vis tranquille</div><div class="step-d" data-t="s4d">Plus de stress, plus d'amendes. Ton argent reste dans ta poche.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec" style="background:var(--bg)">
+  <div class="wrap">
+    <div class="eyebrow" data-t="feat_ey">FONCTIONNALITÉS</div>
+    <h2 class="sec-h" data-t="feat_h">Tout ce dont tu as besoin.</h2>
+    <p class="sec-s" data-t="feat_s">Pour les familles, indépendants et entreprises de toute taille.</p>
+    <div class="feats">
+      <div class="feat"><div class="feat-ico" style="background:#E6FBF3">💰</div><div><div class="feat-t" data-t="f1t">Gagne plus d'argent</div><div class="feat-d" data-t="f1d">Évite les frais de rappel (CHF 10 à 50 par facture). En moyenne CHF 120/an économisés.</div></div></div>
+      <div class="feat"><div class="feat-ico" style="background:#EEF3FF">🔒</div><div><div class="feat-t" data-t="f2t">Simple et sécurisé</div><div class="feat-d" data-t="f2d">Tes données sont protégées et restent privées. Chiffrement complet, hébergé en Europe.</div></div></div>
+      <div class="feat"><div class="feat-ico" style="background:#FFF9EB">☁️</div><div><div class="feat-t" data-t="f3t">Sauvegarde automatique</div><div class="feat-d" data-t="f3d">Tes factures sont sauvegardées dans le cloud. Accessibles partout, tout le temps.</div></div></div>
+      <div class="feat"><div class="feat-ico" style="background:#F7F0FF">👨‍👩‍👧</div><div><div class="feat-t" data-t="f4t">Mode famille & équipe</div><div class="feat-d" data-t="f4d">Partage avec ton conjoint, ta famille ou ton équipe. Un seul endroit pour tout le monde.</div></div></div>
+      <div class="feat"><div class="feat-ico" style="background:#FFF5EB">🔔</div><div><div class="feat-t" data-t="f5t">Rappels intelligents</div><div class="feat-d" data-t="f5d">eazy t'envoie des rappels au bon moment. Jamais trop tôt, jamais trop tard.</div></div></div>
+      <div class="feat"><div class="feat-ico" style="background:#E6FBF3">😊</div><div><div class="feat-t" data-t="f6t">Conçu pour toi</div><div class="feat-d" data-t="f6d">Simple, claire et agréable. Pas besoin d'être expert. Tout le monde comprend en 30 secondes.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="sec" style="background:var(--surface)">
+  <div class="wrap">
+    <div class="eyebrow" data-t="te_ey">ILS NOUS ONT FAIT CONFIANCE</div>
+    <h2 class="sec-h" data-t="te_h">Ce qu'ils en disent.</h2>
+    <p class="sec-s" data-t="te_s">Des personnes comme toi, en Suisse. Le problème est réel — la solution aussi.</p>
+    <div class="tgrid">
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <div class="ttext" data-t="t1">J'ai reçu un rappel de CHF 30 pour une facture de téléphone oubliée. Avec eazy, ça n'arriverait plus jamais.</div>
+        <div class="tsaved" data-t="t1s">💰 Aurait économisé CHF 30</div>
+        <div class="tauthor"><div class="tavatar" style="background:#EEF7F4">👩</div><div><div class="tname">Sophie M.</div><div class="trole" data-t="t1r">Maman de 2 enfants, Lausanne</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <div class="ttext" data-t="t2">En tant qu'indépendant j'ai des dizaines de factures par mois. Je perds un temps fou à les chercher. J'ai besoin de ça.</div>
+        <div class="tsaved" data-t="t2s">⏱️ Perd 2h/mois à chercher</div>
+        <div class="tauthor"><div class="tavatar" style="background:#EEF3FF">👨</div><div><div class="tname">Marco T.</div><div class="trole" data-t="t2r">Freelance, Genève</div></div></div>
+      </div>
+      <div class="tcard">
+        <div class="stars">★★★★★</div>
+        <div class="ttext" data-t="t3">Mon mari et moi on se renvoyait les factures par WhatsApp. On en oubliait toujours une. Avec eazy on aurait économisé CHF 120 cette année.</div>
+        <div class="tsaved" data-t="t3s">💰 Aurait économisé CHF 120/an</div>
+        <div class="tauthor"><div class="tavatar" style="background:#FFF5F5">👩</div><div><div class="tname">Laura B.</div><div class="trole" data-t="t3r">En couple, Zurich</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN BEFORE PRICING -->
+<section class="join-sec">
+  <div style="max-width:600px;margin:0 auto">
+    <div style="font-size:36px;margin-bottom:14px">😊</div>
+    <h2 style="font-size:clamp(24px,3.5vw,38px);font-weight:900;letter-spacing:-1px;color:var(--dark);margin-bottom:10px" data-t="join_h">Essaie eazy gratuitement.</h2>
+    <p style="font-size:17px;color:var(--mid);margin-bottom:28px;line-height:1.6" data-t="join_s">Pas de carte bancaire. Pas d'engagement. Commence avec 10 factures gratuites et vois par toi-même.</p>
+    <button onclick="scrollToSignup()" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--mint),var(--mint-d));color:#fff;border:none;border-radius:14px;padding:17px 38px;font-size:17px;font-weight:800;cursor:pointer;transition:all .15s;font-family:inherit;box-shadow:0 4px 24px var(--mint-glow)" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 10px 34px rgba(0,200,150,.38)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 24px rgba(0,200,150,.18)'">
+      <span data-t="join_btn">Rejoindre gratuitement</span> →
+    </button>
+    <p style="font-size:12px;color:var(--light);margin-top:13px" data-t="join_note">🔒 Aucun spam · Aucune carte requise · Annulation à tout moment</p>
+  </div>
+</section>
+
+<!-- PRICING -->
+<!-- SECTION GRATUIT UNIQUEMENT -->
+<section class="pricing-sec">
+  <div class="wrap" style="max-width:560px;margin:0 auto;text-align:center">
+    <div class="eyebrow">C'EST GRATUIT</div>
+    <h2 class="sec-h" style="margin-bottom:10px">Commence sans rien payer.</h2>
+    <p style="font-size:17px;color:var(--mid);margin-bottom:40px;line-height:1.65">Pas de carte. Pas de surprise. Tu utilises eazy gratuitement — et si un jour tu veux plus, tu choisiras toi-même.</p>
+
+    <div class="pcard pop" style="max-width:400px;margin:0 auto 32px;text-align:left">
+      <div class="pop-badge">✅ Inclus gratuitement</div>
+      <div class="p-price" style="margin-top:8px">CHF 0</div>
+      <div style="font-size:13px;color:var(--light);margin-bottom:18px">pour toujours</div>
+      <ul class="p-feats">
+        <li>10 factures pour démarrer</li>
+        <li>Rappels automatiques (7j, 2j, jour J)</li>
+        <li>Stockage sécurisé de tes factures</li>
+        <li>1 facture toujours active, même si tu arrêtes</li>
+      </ul>
+      <button class="pbtn grn" onclick="scrollToSignup()" style="margin-top:8px">Rejoindre gratuitement →</button>
+      <p style="font-size:12px;color:var(--light);margin-top:12px;text-align:center">🔒 Aucune carte · Aucun engagement</p>
+    </div>
+
+    <button onclick="document.getElementById('modal-prix').style.display='flex'" style="background:none;border:none;color:var(--light);font-size:13px;font-family:inherit;cursor:pointer;text-decoration:underline;padding:8px">
+      Tu veux en savoir plus sur les options payantes ?
+    </button>
+  </div>
+</section>
+
+<!-- MODAL PRIX — visible uniquement si le client clique -->
+<div id="modal-prix" style="display:none;position:fixed;inset:0;background:rgba(11,17,32,.7);z-index:400;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:var(--surface);border-radius:24px;padding:36px;max-width:900px;width:100%;max-height:90vh;overflow-y:auto;position:relative">
+    <button onclick="document.getElementById('modal-prix').style.display='none'" style="position:absolute;top:16px;right:18px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--light);font-family:inherit">✕</button>
+    <div style="text-align:center;margin-bottom:30px">
+      <div class="eyebrow">OPTIONS</div>
+      <h3 style="font-size:26px;font-weight:900;letter-spacing:-1px;color:var(--dark);margin-bottom:8px">Tu veux aller plus loin ?</h3>
+      <p style="font-size:15px;color:var(--mid)">Moins cher qu'un seul frais de rappel oublié.</p>
+    </div>
+    <div class="pgrid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px">
+
+      <div class="pcard">
+        <div class="p-name">Individuel</div>
+        <div class="p-price">CHF 4.99 <span>/mois</span></div>
+        <div class="p-limit">8 factures / mois</div>
+        <div class="p-anchor">économise jusqu'à CHF 250/an</div>
+        <ul class="p-feats">
+          <li>8 factures par mois</li>
+          <li>Archives complètes</li>
+          <li>Rappels intelligents</li>
+        </ul>
+        <button class="pbtn pri" onclick="scrollToSignup();document.getElementById('modal-prix').style.display='none'">Rejoindre la liste</button>
+      </div>
+
+      <div class="pcard pop">
+        <div class="pop-badge">⭐ Le plus populaire</div>
+        <div class="p-name">Famille</div>
+        <div class="p-price">CHF 12.99 <span>/mois</span></div>
+        <div class="p-limit">30 factures · 4 membres</div>
+        <div class="p-anchor">CHF 3.25 / membre</div>
+        <ul class="p-feats">
+          <li>30 factures par mois</li>
+          <li>Jusqu'à 4 membres</li>
+          <li>Tableau de bord commun</li>
+        </ul>
+        <button class="pbtn grn" onclick="scrollToSignup();document.getElementById('modal-prix').style.display='none'">Rejoindre la liste</button>
+      </div>
+
+      <div class="pcard">
+        <div class="p-name">Petite entreprise</div>
+        <div class="p-price">CHF 24.99 <span>/mois</span></div>
+        <div class="p-limit">70 factures / mois</div>
+        <ul class="p-feats">
+          <li>70 factures par mois</li>
+          <li>Admin + 3 sous-comptes</li>
+          <li>Export PDF & historique</li>
+        </ul>
+        <button class="pbtn pur" onclick="scrollToSignup();document.getElementById('modal-prix').style.display='none'">Rejoindre la liste</button>
+      </div>
+
+      <div class="pcard">
+        <div class="p-name">Grande entreprise</div>
+        <div class="p-price">CHF 39.99 <span>/mois</span></div>
+        <div class="p-limit">200 factures / mois</div>
+        <ul class="p-feats">
+          <li>200 factures par mois</li>
+          <li>Admin + 10 sous-comptes</li>
+          <li>Support prioritaire</li>
+        </ul>
+        <button class="pbtn dark" onclick="scrollToSignup();document.getElementById('modal-prix').style.display='none'">Rejoindre la liste</button>
+      </div>
+
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <div class="pay-methods" style="justify-content:center">
+        <div class="pay-badge">💳 Carte de crédit / débit</div>
+        <div class="twint-badge"><svg width="18" height="18" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="#FF0068"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="10" font-weight="900" font-family="Arial">twint</text></svg> TWINT</div>
+        <div class="pay-badge">🏦 Virement bancaire</div>
+      </div>
+      <p style="font-size:12px;color:var(--light);margin-top:12px">🔒 Paiements sécurisés · Annulation à tout moment</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP -->
+<section class="signup-sec" id="signup">
+  <h2 class="signup-h" data-t="cta_h">Prêt à ne plus perdre d'argent ?</h2>
+  <p class="signup-s" data-t="cta_s">Rejoins les premiers utilisateurs de eazy en Suisse. C'est gratuit pour commencer.</p>
+  <div class="signup-card">
+    <div id="fc">
+      <!-- URGENCY -->
+      <div class="urgency-badge">
+        <span>🔥</span>
+        <span id="urgency-txt">Encore <strong>43 places</strong> dans la bêta gratuite ce mois-ci</span>
+      </div>
+
+      <!-- PROGRESS BAR -->
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="progress-label-txt">Ta progression</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+
+      <div class="signup-card-h" data-t="sg_ch">Rejoins la liste d'attente</div>
+      <div class="signup-card-s" data-t="sg_cs">On te contacte dès que l'app est prête.</div>
+      <div class="fgrid">
+        <input class="inp" type="text" id="f_fn" placeholder="Prénom" data-t-ph="ph_fn" autocomplete="given-name" oninput="updateProgress()"/>
+        <input class="inp" type="text" id="f_ln" placeholder="Nom" data-t-ph="ph_ln" autocomplete="family-name" oninput="updateProgress()"/>
+        <input class="inp s2" type="email" id="f_em" placeholder="Email" data-t-ph="ph_em" autocomplete="email" oninput="updateProgress()"/>
+        <input class="inp s2" type="tel" id="f_ph" placeholder="Téléphone (ex: +41 79 123 45 67)" data-t-ph="ph_ph" autocomplete="tel" oninput="updateProgress()"/>
+        <select class="inp s2" id="f_pr" onchange="updateProgress()" style="cursor:pointer;appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 14px center">
+          <option value="" data-t="op0">Tu es... (famille, indépendant, entreprise)</option>
+          <option value="famille" data-t="op1">Famille</option>
+          <option value="independant" data-t="op2">Indépendant / Freelance</option>
+          <option value="petite" data-t="op3">Petite entreprise</option>
+          <option value="grande" data-t="op4">Grande entreprise</option>
+        </select>
+      </div>
+      <div class="err" id="err" data-t="err">Merci de remplir au moins ton prénom et ton email.</div>
+      <button class="sbtn" onclick="doSubmit()"><span data-t="sbtn">Je veux découvrir eazy</span> →</button>
+
+      <!-- MINI SOCIAL PROOF SOUS BOUTON -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px">
+        <div style="display:flex">
+          <div style="width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:#EEF7F4;display:flex;align-items:center;justify-content:center;font-size:11px;margin-left:0">👩</div>
+          <div style="width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:#EEF3FF;display:flex;align-items:center;justify-content:center;font-size:11px;margin-left:-7px">👨</div>
+          <div style="width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:#FFF5EB;display:flex;align-items:center;justify-content:center;font-size:11px;margin-left:-7px">👩</div>
+          <div style="width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:#E6FBF3;display:flex;align-items:center;justify-content:center;font-size:11px;margin-left:-7px">👨</div>
+        </div>
+        <span style="font-size:12px;color:var(--light);font-weight:600"><span id="joined-count">1 247</span> personnes déjà inscrites</span>
+      </div>
+
+      <p class="fnote" data-t="fnote">🔒 Aucun spam. Tes données restent privées. On te contacte uniquement pour le lancement.</p>
+    </div>
+    <div class="success" id="ok">
+      <div class="success-ico">🎉</div>
+      <div class="success-h" data-t="ok_h">Tu es sur la liste !</div>
+      <div class="success-s" data-t="ok_s">On te contacte dès que eazy est disponible. Tu ne perdras plus un centime pour un simple oubli.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-sec">
+  <h2 class="cta-h" data-t="cta_h">Prêt à ne plus perdre d'argent ?</h2>
+  <p class="cta-s" data-t="cta_s">Rejoins les premiers utilisateurs de eazy en Suisse. C'est gratuit pour commencer.</p>
+  <button class="cta-btn" onclick="scrollToSignup()"><span data-t="cta_b">Je veux découvrir eazy</span> →</button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px">
+    <div style="width:28px;height:28px;border-radius:8px;background:var(--dark);display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 40 40" fill="none"><circle cx="13" cy="14" r="4" fill="#00C896"/><circle cx="27" cy="14" r="4" fill="#4F8EF7"/><path d="M10 24 Q20 34 30 24" stroke="#00C896" stroke-width="3.5" stroke-linecap="round" fill="none"/><circle cx="32" cy="22" r="2.5" fill="#FF9B3C"/></svg>
+    </div>
+    <span style="font-weight:900;color:var(--dark);font-size:18px">eazy</span>
+  </div>
+  <p style="margin-bottom:8px"><span data-t="foot">© 2026 eazy – Fait avec ❤️ en Suisse</span></p>
+  <p style="margin-bottom:4px"><a href="mailto:eazysmile.ch@gmail.com" style="color:var(--mint);font-weight:600">eazysmile.ch@gmail.com</a></p>
+  <p><a href="#" data-t="f_privacy">Confidentialité</a> · <a href="mailto:eazysmile.ch@gmail.com" data-t="f_contact">Contact</a></p>
+</footer>
+
+<!-- FLOATING CTA mobile -->
+<button class="float-cta" onclick="scrollToSignup()" data-t="join_btn">Rejoindre gratuitement — c'est gratuit →</button>
+
+<script>
+/* ── TRADUCTIONS ── */
+const T={
+fr:{
+  pill:"⚠️ En Suisse, un simple oubli de facture peut coûter CHF 10, 20, voire 50 CHF de frais de rappel.",
+  h1a:"Finis les",h1b:"oublis.",h1c:"Garde ton argent.",
+  sub:"eazy organise toutes tes factures, te rappelle avant les échéances et les archive en sécurité. Moins de stress, plus d'argent dans ta poche.",
+  plbl:"CE QUE TU PERDS PAR AN EN SUISSE À CAUSE DES OUBLIS",
+  c1:"1er rappel",c2:"2ème rappel",c3:"3ème rappel",c4:"avec eazy",
+  pnote:"Avec 3 à 5 oublis par an — tu perds facilement CHF 100 à 250 pour rien.",
+  kv1_t:"Rappels automatiques",kv1_d:"7j, 2j et le jour J — jamais de frais de rappel.",
+  kv2_t:"Toutes tes factures stockées",kv2_d:"Retrouve n'importe quelle facture en 2 secondes, même après 5 ans.",
+  b1:"Rappels intelligents",b2:"Stockage à vie",b3:"Sérénité au quotidien",
+  how_ey:"COMMENT ÇA MARCHE",how_h:"Simple comme bonjour.",how_s:"Pas besoin d'être organisé. eazy fait tout pour toi en quelques secondes.",
+  s1n:"Étape 1",s1t:"Tu ajoutes ta facture",s1d:"Prends une photo ou importe ton PDF. En 3 secondes c'est dans l'app.",
+  s2n:"Étape 2",s2t:"On l'organise",s2d:"eazy lit les informations et classe tout automatiquement. Rien à saisir.",
+  s3n:"Étape 3",s3t:"Tu reçois des rappels",s3d:"7 jours avant, 2 jours avant, le jour J. Plus jamais d'oubli.",
+  s4n:"Étape 4",s4t:"Tu vis tranquille",s4d:"Plus de stress, plus d'amendes. Ton argent reste dans ta poche.",
+  feat_ey:"FONCTIONNALITÉS",feat_h:"Tout ce dont tu as besoin.",feat_s:"Pour les familles, indépendants et entreprises de toute taille.",
+  f1t:"Gagne plus d'argent",f1d:"Évite les frais de rappel (CHF 10 à 50 par facture). En moyenne CHF 120/an économisés.",
+  f2t:"Simple et sécurisé",f2d:"Tes données sont protégées et restent privées. Chiffrement complet, hébergé en Europe.",
+  f3t:"Sauvegarde automatique",f3d:"Tes factures sont sauvegardées dans le cloud. Accessibles partout, tout le temps.",
+  f4t:"Mode famille & équipe",f4d:"Partage avec ton conjoint, ta famille ou ton équipe. Un seul endroit pour tout le monde.",
+  f5t:"Rappels intelligents",f5d:"eazy t'envoie des rappels au bon moment. Jamais trop tôt, jamais trop tard.",
+  f6t:"Conçu pour toi",f6d:"Simple, claire et agréable. Pas besoin d'être expert. Tout le monde comprend en 30 secondes.",
+  te_ey:"ILS NOUS ONT FAIT CONFIANCE",te_h:"Ce qu'ils en disent.",te_s:"Des personnes comme toi, en Suisse. Le problème est réel — la solution aussi.",
+  t1:"J'ai reçu un rappel de CHF 30 pour une facture de téléphone oubliée. Avec eazy, ça n'arriverait plus jamais.",t1s:"💰 Aurait économisé CHF 30",t1r:"Maman de 2 enfants, Lausanne",
+  t2:"En tant qu'indépendant j'ai des dizaines de factures. Je perds un temps fou à les chercher.",t2s:"⏱️ Perd 2h/mois à chercher",t2r:"Freelance, Genève",
+  t3:"Mon mari et moi on se renvoyait les factures par WhatsApp. On en oubliait toujours une.",t3s:"💰 Aurait économisé CHF 120/an",t3r:"En couple, Zurich",
+  sg_h:"Intéressé(e) par eazy ?",sg_s:"Laisse ton email et sois le/la premier(ère) informé(e) du lancement. Gratuit, sans engagement.",
+  sg_ch:"Rejoins la liste d'attente",sg_cs:"On te contacte dès que l'app est prête.",
+  ph_fn:"Prénom",ph_ln:"Nom",ph_em:"Email",ph_ph:"Téléphone (ex: +41 79 123 45 67)",
+  op0:"Tu es... (famille, indépendant, entreprise)",op1:"Famille",op2:"Indépendant / Freelance",op3:"Petite entreprise",op4:"Grande entreprise",
+  err:"Merci de remplir au moins ton prénom et ton email.",
+  sbtn:"Je veux découvrir eazy",fnote:"🔒 Aucun spam. Tes données restent privées. On te contacte uniquement pour le lancement.",
+  ok_h:"Tu es sur la liste !",ok_s:"On te contacte dès que eazy est disponible. Tu ne perdras plus un centime pour un simple oubli.",
+  pr_ey:"TARIFS",pr_h:"Moins cher qu'un seul rappel.",pr_s:"Un abonnement eazy coûte moins qu'un seul frais de rappel que tu évites. Le calcul est vite fait.",
+  pl1n:"Gratuit",pl1lim:"10 factures pour commencer",pl1d:"Pour tester eazy sans risque et créer l'habitude.",pl1f1:"10 factures au total",pl1f2:"1 facture active pour toujours",pl1f3:"Rappels automatiques",pl1f4:"Stockage sécurisé",pl1b:"Commencer gratuitement",
+  pm:"/mois",pm2:"/mois",pm3:"/mois",pm4:"/mois",
+  pl2n:"Individuel",pl2lim:"8 factures par mois",pl2d:"Pour les particuliers qui veulent arrêter de perdre de l'argent.",pl2f1:"8 factures par mois",pl2f2:"Archives complètes",pl2f3:"Rappels intelligents",pl2f4:"1 compte, 1 appareil",pl2f5:"1 facture toujours active si arrêt",pl2b:"Rejoindre la liste",
+  pop_b:"⭐ Le plus populaire",
+  pl3n:"Famille",pl3lim:"30 factures par mois · 4 membres",pl3d:"Pour toute la famille — un seul abonnement.",pl3f1:"30 factures par mois",pl3f2:"Jusqu'à 4 membres",pl3f3:"Factures partagées",pl3f4:"Tableau de bord commun",pl3f5:"1 facture par membre si arrêt",pl3b:"Rejoindre la liste",
+  pl4n:"Petite entreprise",pl4lim:"70 factures par mois",pl4d:"Pour les indépendants et petites équipes.",pl4f1:"70 factures par mois",pl4f2:"Admin + 3 sous-comptes",pl4f3:"Export PDF & historique",pl4f4:"Recherche avancée",pl4f5:"1 facture active si arrêt",pl4b:"Rejoindre la liste",
+  pl5n:"Grande entreprise",pl5lim:"200 factures par mois",pl5d:"Pour les entreprises avec un grand volume.",pl5f1:"200 factures par mois",pl5f2:"Admin + 10 sous-comptes",pl5f3:"Export & comptabilité",pl5f4:"Support prioritaire",pl5f5:"1 facture active si arrêt",pl5b:"Rejoindre la liste",
+  pay_lbl:"MOYENS DE PAIEMENT ACCEPTÉS",pay1:"Carte de crédit / débit",pay3:"Virement bancaire",pay_note:"🔒 Paiements 100% sécurisés · Annulation à tout moment · Aucun engagement",
+  cta_h:"Prêt à ne plus perdre d'argent ?",cta_s:"Rejoins les premiers utilisateurs de eazy en Suisse. C'est gratuit pour commencer.",cta_b:"Je veux découvrir eazy",
+  join_h:"Essaie eazy gratuitement.",join_s:"Pas de carte bancaire. Pas d'engagement. Commence avec 10 factures gratuites et vois par toi-même à quel point c'est simple.",join_btn:"Rejoindre gratuitement",join_note:"🔒 Aucun spam · Aucune carte requise · Annulation à tout moment",
+  foot:"© 2026 eazy – Fait avec ❤️ en Suisse",f_privacy:"Confidentialité",f_contact:"Contact"
+},
+de:{
+  pill:"⚠️ In der Schweiz kann eine vergessene Rechnung CHF 10, 20 oder sogar 50 CHF Mahngebühren kosten.",
+  h1a:"Schluss mit",h1b:"Vergessen.",h1c:"Behalte dein Geld.",
+  sub:"eazy organisiert alle deine Rechnungen, erinnert dich vor Fälligkeiten und archiviert sie sicher. Weniger Stress, mehr Geld in der Tasche.",
+  plbl:"WAS DU PRO JAHR IN DER SCHWEIZ DURCH VERGESSEN VERLIERST",
+  c1:"1. Mahnung",c2:"2. Mahnung",c3:"3. Mahnung",c4:"mit eazy",
+  pnote:"Mit 3 bis 5 Vergesslichkeiten pro Jahr verlierst du schnell CHF 100 bis 250 — für nichts.",
+  kv1_t:"Automatische Erinnerungen",kv1_d:"7T, 2T und am Tag selbst — nie wieder Mahngebühren.",
+  kv2_t:"Alle Rechnungen gespeichert",kv2_d:"Finde jede Rechnung in 2 Sekunden, auch nach 5 Jahren.",
+  b1:"Intelligente Erinnerungen",b2:"Lebenslanger Speicher",b3:"Ruhe im Alltag",
+  how_ey:"SO FUNKTIONIERT ES",how_h:"Einfach wie nie.",how_s:"Du musst nicht organisiert sein. eazy erledigt alles für dich.",
+  s1n:"Schritt 1",s1t:"Rechnung hinzufügen",s1d:"Foto oder PDF importieren. In 3 Sekunden ist es in der App.",
+  s2n:"Schritt 2",s2t:"Wir organisieren es",s2d:"eazy liest die Informationen und klassifiziert alles automatisch.",
+  s3n:"Schritt 3",s3t:"Erinnerungen erhalten",s3d:"7 Tage vorher, 2 Tage vorher, am Fälligkeitstag. Nie wieder vergessen.",
+  s4n:"Schritt 4",s4t:"Du lebst entspannt",s4d:"Kein Stress, keine Bussen. Dein Geld bleibt in deiner Tasche.",
+  feat_ey:"FUNKTIONEN",feat_h:"Alles, was du brauchst.",feat_s:"Für Familien, Selbstständige und Unternehmen jeder Grösse.",
+  f1t:"Mehr Geld verdienen",f1d:"Vermeide Mahngebühren (CHF 10–50 pro Rechnung). Durchschnittlich CHF 120/Jahr gespart.",
+  f2t:"Einfach und sicher",f2d:"Deine Daten sind geschützt und bleiben privat. Vollverschlüsselung, in Europa gehostet.",
+  f3t:"Automatische Sicherung",f3d:"Deine Rechnungen werden sicher in der Cloud gespeichert. Überall zugänglich.",
+  f4t:"Familien & Team-Modus",f4d:"Teile mit deiner Familie oder deinem Team. Ein Ort für alle.",
+  f5t:"Intelligente Erinnerungen",f5d:"eazy sendet Erinnerungen zum richtigen Zeitpunkt. Nie zu früh, nie zu spät.",
+  f6t:"Für dich gemacht",f6d:"Einfach, klar und angenehm zu bedienen. Jeder versteht es in 30 Sekunden.",
+  te_ey:"SIE VERTRAUEN UNS",te_h:"Was sie sagen.",te_s:"Menschen wie du, in der Schweiz.",
+  t1:"Ich bekam eine Mahnung von CHF 30 für eine vergessene Telefonrechnung. Mit eazy wäre das nie passiert.",t1s:"💰 Hätte CHF 30 gespart",t1r:"Mutter von 2 Kindern, Lausanne",
+  t2:"Als Selbstständiger habe ich Dutzende Rechnungen. Ich verliere so viel Zeit beim Suchen.",t2s:"⏱️ Verliert 2h/Monat beim Suchen",t2r:"Freelancer, Genf",
+  t3:"Mein Mann und ich schickten Rechnungen per WhatsApp. Wir vergassen immer eine.",t3s:"💰 Hätte CHF 120/Jahr gespart",t3r:"Paar, Zürich",
+  sg_h:"Interessiert an eazy?",sg_s:"Hinterlasse deine E-Mail und werde als Erste/r informiert. Kostenlos, unverbindlich.",
+  sg_ch:"Warteliste beitreten",sg_cs:"Wir melden uns, sobald die App bereit ist.",
+  ph_fn:"Vorname",ph_ln:"Nachname",ph_em:"E-Mail",ph_ph:"Telefon (z.B. +41 79 123 45 67)",
+  op0:"Ich bin... (Familie, Selbstständig, Unternehmen)",op1:"Familie",op2:"Selbstständig / Freelancer",op3:"Kleines Unternehmen",op4:"Grosses Unternehmen",
+  err:"Bitte fülle mindestens Vorname und E-Mail aus.",
+  sbtn:"Ich möchte eazy entdecken",fnote:"🔒 Kein Spam. Deine Daten bleiben privat.",
+  ok_h:"Du bist auf der Liste!",ok_s:"Wir melden uns, sobald eazy verfügbar ist.",
+  pr_ey:"PREISE",pr_h:"Günstiger als eine einzige Mahnung.",pr_s:"Ein eazy-Abo kostet weniger als eine einzige Mahngebühr.",
+  pl1n:"Kostenlos",pl1lim:"10 Rechnungen zum Starten",pl1d:"eazy risikofrei testen.",pl1f1:"10 Rechnungen insgesamt",pl1f2:"1 Rechnung dauerhaft aktiv",pl1f3:"Automatische Erinnerungen",pl1f4:"Sicherer Speicher",pl1b:"Kostenlos starten",
+  pm:"/Monat",pm2:"/Monat",pm3:"/Monat",pm4:"/Monat",
+  pl2n:"Einzelperson",pl2lim:"8 Rechnungen pro Monat",pl2d:"Für Einzelpersonen, die kein Geld verlieren wollen.",pl2f1:"8 Rechnungen/Monat",pl2f2:"Vollständiges Archiv",pl2f3:"Intelligente Erinnerungen",pl2f4:"1 Konto, 1 Gerät",pl2f5:"1 Rechnung aktiv bei Kündigung",pl2b:"Liste beitreten",
+  pop_b:"⭐ Am beliebtesten",
+  pl3n:"Familie",pl3lim:"30 Rechnungen/Monat · 4 Mitglieder",pl3d:"Für die ganze Familie — ein Abo für alle.",pl3f1:"30 Rechnungen/Monat",pl3f2:"Bis zu 4 Mitglieder",pl3f3:"Geteilte Rechnungen",pl3f4:"Gemeinsames Dashboard",pl3f5:"1 Rechnung pro Mitglied bei Kündigung",pl3b:"Liste beitreten",
+  pl4n:"Kleines Unternehmen",pl4lim:"70 Rechnungen pro Monat",pl4d:"Für Selbstständige und kleine Teams.",pl4f1:"70 Rechnungen/Monat",pl4f2:"Admin + 3 Unterkonten",pl4f3:"PDF-Export & Verlauf",pl4f4:"Erweiterte Suche",pl4f5:"1 Rechnung aktiv bei Kündigung",pl4b:"Liste beitreten",
+  pl5n:"Grosses Unternehmen",pl5lim:"200 Rechnungen pro Monat",pl5d:"Für Unternehmen mit hohem Volumen.",pl5f1:"200 Rechnungen/Monat",pl5f2:"Admin + 10 Unterkonten",pl5f3:"Export & Buchhaltung",pl5f4:"Prioritätssupport",pl5f5:"1 Rechnung aktiv bei Kündigung",pl5b:"Liste beitreten",
+  pay_lbl:"AKZEPTIERTE ZAHLUNGSMETHODEN",pay1:"Kredit- / Debitkarte",pay3:"Banküberweisung",pay_note:"🔒 100% sichere Zahlungen · Jederzeit kündbar · Keine Bindung",
+  cta_h:"Bereit, kein Geld mehr zu verlieren?",cta_s:"Werde einer der ersten eazy-Nutzer in der Schweiz. Kostenlos starten.",cta_b:"Ich möchte eazy entdecken",
+  join_h:"Probiere eazy kostenlos.",join_s:"Keine Kreditkarte. Kein Risiko. Starte mit 10 kostenlosen Rechnungen.",join_btn:"Kostenlos beitreten",join_note:"🔒 Kein Spam · Keine Karte erforderlich · Jederzeit kündbar",
+  foot:"© 2026 eazy – Mit ❤️ in der Schweiz gemacht",f_privacy:"Datenschutz",f_contact:"Kontakt"
+},
+en:{
+  pill:"⚠️ In Switzerland, a forgotten bill can cost CHF 10, 20, or even 50 CHF in reminder fees.",
+  h1a:"No more",h1b:"forgotten bills.",h1c:"Keep your money.",
+  sub:"eazy organizes all your invoices, reminds you before due dates, and archives them securely. Less stress, more money in your pocket.",
+  plbl:"WHAT YOU LOSE PER YEAR IN SWITZERLAND DUE TO FORGETFULNESS",
+  c1:"1st reminder",c2:"2nd reminder",c3:"3rd reminder",c4:"with eazy",
+  pnote:"With 3 to 5 oversights per year — you easily lose CHF 100 to 250 for nothing.",
+  kv1_t:"Automatic reminders",kv1_d:"7d, 2d and on the day — never pay a reminder fee again.",
+  kv2_t:"All your bills stored",kv2_d:"Find any bill in 2 seconds, even after 5 years.",
+  b1:"Smart reminders",b2:"Lifetime storage",b3:"Peace of mind every day",
+  how_ey:"HOW IT WORKS",how_h:"Simple as can be.",how_s:"No need to be organized. eazy does everything for you in seconds.",
+  s1n:"Step 1",s1t:"Add your bill",s1d:"Take a photo or import your PDF. In 3 seconds it's in the app.",
+  s2n:"Step 2",s2t:"We organize it",s2d:"eazy reads the info and classifies everything automatically. Nothing to type.",
+  s3n:"Step 3",s3t:"Receive reminders",s3d:"7 days before, 2 days before, on the due date. Never forget again.",
+  s4n:"Step 4",s4t:"Live in peace",s4d:"No more stress, no more fines. Your money stays in your pocket.",
+  feat_ey:"FEATURES",feat_h:"Everything you need.",feat_s:"For families, freelancers and businesses of all sizes.",
+  f1t:"Earn more money",f1d:"Avoid reminder fees (CHF 10–50 per bill). Average CHF 120/year saved.",
+  f2t:"Simple and secure",f2d:"Your data is protected and stays private. Full encryption, hosted in Europe.",
+  f3t:"Automatic backup",f3d:"Your bills are safely stored in the cloud. Accessible anywhere, anytime.",
+  f4t:"Family & team mode",f4d:"Share with your partner, family or team. One place for everyone.",
+  f5t:"Smart reminders",f5d:"eazy sends reminders at the right time. Never too early, never too late.",
+  f6t:"Designed for you",f6d:"Simple, clear and pleasant. No expertise needed. Everyone gets it in 30 seconds.",
+  te_ey:"THEY TRUST US",te_h:"What they say.",te_s:"People like you, in Switzerland. The problem is real — so is the solution.",
+  t1:"I got a CHF 30 reminder for a forgotten phone bill. With eazy, that would never happen again.",t1s:"💰 Would have saved CHF 30",t1r:"Mother of 2, Lausanne",
+  t2:"As a freelancer I have dozens of invoices. I waste so much time searching for them.",t2s:"⏱️ Loses 2h/month searching",t2r:"Freelancer, Geneva",
+  t3:"My husband and I sent bills via WhatsApp. We always forgot one.",t3s:"💰 Would have saved CHF 120/year",t3r:"Couple, Zurich",
+  sg_h:"Interested in eazy?",sg_s:"Leave your email and be the first to know when we launch. Free, no commitment.",
+  sg_ch:"Join the waitlist",sg_cs:"We'll contact you as soon as the app is ready.",
+  ph_fn:"First name",ph_ln:"Last name",ph_em:"Email",ph_ph:"Phone (e.g. +41 79 123 45 67)",
+  op0:"I am... (family, freelancer, business)",op1:"Family",op2:"Freelancer / Self-employed",op3:"Small business",op4:"Large company",
+  err:"Please fill in at least your first name and email.",
+  sbtn:"I want to discover eazy",fnote:"🔒 No spam. Your data stays private.",
+  ok_h:"You're on the list!",ok_s:"We'll contact you as soon as eazy is available.",
+  pr_ey:"PRICING",pr_h:"Cheaper than a single reminder.",pr_s:"An eazy subscription costs less than one reminder fee you avoid.",
+  pl1n:"Free",pl1lim:"10 bills to start",pl1d:"Test eazy risk-free and build the habit.",pl1f1:"10 bills total",pl1f2:"1 bill active forever",pl1f3:"Automatic reminders",pl1f4:"Secure storage",pl1b:"Start for free",
+  pm:"/month",pm2:"/month",pm3:"/month",pm4:"/month",
+  pl2n:"Individual",pl2lim:"8 bills per month",pl2d:"For people who want to stop losing money.",pl2f1:"8 bills/month",pl2f2:"Full archives",pl2f3:"Smart reminders",pl2f4:"1 account, 1 device",pl2f5:"1 bill always active if cancelled",pl2b:"Join the list",
+  pop_b:"⭐ Most popular",
+  pl3n:"Family",pl3lim:"30 bills/month · 4 members",pl3d:"For the whole family — one subscription.",pl3f1:"30 bills/month",pl3f2:"Up to 4 members",pl3f3:"Shared bills",pl3f4:"Common dashboard",pl3f5:"1 bill per member if cancelled",pl3b:"Join the list",
+  pl4n:"Small business",pl4lim:"70 bills per month",pl4d:"For freelancers and small teams.",pl4f1:"70 bills/month",pl4f2:"Admin + 3 sub-accounts",pl4f3:"PDF export & history",pl4f4:"Advanced search",pl4f5:"1 bill active if cancelled",pl4b:"Join the list",
+  pl5n:"Large company",pl5lim:"200 bills per month",pl5d:"For companies with high volume.",pl5f1:"200 bills/month",pl5f2:"Admin + 10 sub-accounts",pl5f3:"Export & accounting",pl5f4:"Priority support",pl5f5:"1 bill active if cancelled",pl5b:"Join the list",
+  pay_lbl:"ACCEPTED PAYMENT METHODS",pay1:"Credit / debit card",pay3:"Bank transfer",pay_note:"🔒 100% secure payments · Cancel anytime · No commitment",
+  cta_h:"Ready to stop losing money?",cta_s:"Join the first eazy users in Switzerland. Free to start.",cta_b:"I want to discover eazy",
+  join_h:"Try eazy for free.",join_s:"No credit card. No commitment. Start with 10 free bills.",join_btn:"Join for free",join_note:"🔒 No spam · No card required · Cancel anytime",
+  foot:"© 2026 eazy – Made with ❤️ in Switzerland",f_privacy:"Privacy",f_contact:"Contact"
+},
+it:{
+  pill:"⚠️ In Svizzera, dimenticare una fattura può costare CHF 10, 20 o anche 50 CHF di spese di sollecito.",
+  h1a:"Basta con le",h1b:"dimenticanze.",h1c:"Tieni i tuoi soldi.",
+  sub:"eazy organizza tutte le tue fatture, ti ricorda prima delle scadenze e le archivia in sicurezza. Meno stress, più soldi in tasca.",
+  plbl:"QUANTO PERDI ALL'ANNO IN SVIZZERA PER LE DIMENTICANZE",
+  c1:"1° sollecito",c2:"2° sollecito",c3:"3° sollecito",c4:"con eazy",
+  pnote:"Con 3-5 dimenticanze all'anno — perdi facilmente CHF 100-250 per niente.",
+  kv1_t:"Promemoria automatici",kv1_d:"7g, 2g e il giorno stesso — mai più spese di sollecito.",
+  kv2_t:"Tutte le tue fatture archiviate",kv2_d:"Trova qualsiasi fattura in 2 secondi, anche dopo 5 anni.",
+  b1:"Promemoria intelligenti",b2:"Archiviazione a vita",b3:"Serenità ogni giorno",
+  how_ey:"COME FUNZIONA",how_h:"Semplice come bere un bicchier d'acqua.",how_s:"Non devi essere organizzato. eazy fa tutto per te in pochi secondi.",
+  s1n:"Passo 1",s1t:"Aggiungi la fattura",s1d:"Scatta una foto o importa il PDF. In 3 secondi è nell'app.",
+  s2n:"Passo 2",s2t:"La organizziamo",s2d:"eazy legge le informazioni e classifica tutto automaticamente.",
+  s3n:"Passo 3",s3t:"Ricevi promemoria",s3d:"7 giorni prima, 2 giorni prima, il giorno stesso. Mai più dimenticanze.",
+  s4n:"Passo 4",s4t:"Vivi tranquillo",s4d:"Niente stress, niente multe. I tuoi soldi restano in tasca.",
+  feat_ey:"FUNZIONALITÀ",feat_h:"Tutto ciò di cui hai bisogno.",feat_s:"Per famiglie, freelance e aziende di ogni dimensione.",
+  f1t:"Guadagna di più",f1d:"Evita le spese di sollecito (CHF 10-50 per fattura). In media CHF 120/anno risparmiati.",
+  f2t:"Semplice e sicuro",f2d:"I tuoi dati sono protetti e restano privati. Cifratura completa, ospitato in Europa.",
+  f3t:"Backup automatico",f3d:"Le tue fatture sono salvate nel cloud. Accessibili ovunque, sempre.",
+  f4t:"Modalità famiglia e team",f4d:"Condividi con il partner, la famiglia o il team. Un unico posto per tutti.",
+  f5t:"Promemoria intelligenti",f5d:"eazy invia promemoria al momento giusto. Mai troppo presto, mai troppo tardi.",
+  f6t:"Fatto per te",f6d:"Semplice, chiaro e piacevole. Nessuna competenza richiesta. Tutti capiscono in 30 secondi.",
+  te_ey:"SI FIDANO DI NOI",te_h:"Cosa dicono.",te_s:"Persone come te, in Svizzera. Il problema è reale — la soluzione anche.",
+  t1:"Ho ricevuto un sollecito di CHF 30 per una bolletta dimenticata. Con eazy non sarebbe mai successo.",t1s:"💰 Avrebbe risparmiato CHF 30",t1r:"Mamma di 2 figli, Losanna",
+  t2:"Come freelance ho decine di fatture. Perdo un sacco di tempo a cercarle.",t2s:"⏱️ Perde 2h/mese a cercare",t2r:"Freelance, Ginevra",
+  t3:"Mio marito ed io ci mandavamo le fatture via WhatsApp. Ne dimenticavamo sempre una.",t3s:"💰 Avrebbe risparmiato CHF 120/anno",t3r:"Coppia, Zurigo",
+  sg_h:"Interessato/a a eazy?",sg_s:"Lascia la tua email e sii il/la primo/a informato/a del lancio. Gratuito, senza impegno.",
+  sg_ch:"Unisciti alla lista d'attesa",sg_cs:"Ti contatteremo appena l'app è pronta.",
+  ph_fn:"Nome",ph_ln:"Cognome",ph_em:"Email",ph_ph:"Telefono (es: +41 79 123 45 67)",
+  op0:"Sono... (famiglia, freelance, azienda)",op1:"Famiglia",op2:"Freelance / Autonomo",op3:"Piccola azienda",op4:"Grande azienda",
+  err:"Per favore compila almeno nome ed email.",
+  sbtn:"Voglio scoprire eazy",fnote:"🔒 Nessuno spam. I tuoi dati restano privati.",
+  ok_h:"Sei nella lista!",ok_s:"Ti contatteremo appena eazy sarà disponibile.",
+  pr_ey:"PREZZI",pr_h:"Meno caro di un singolo sollecito.",pr_s:"Un abbonamento eazy costa meno di una sola spesa di sollecito.",
+  pl1n:"Gratuito",pl1lim:"10 fatture per iniziare",pl1d:"Prova eazy senza rischi.",pl1f1:"10 fatture in totale",pl1f2:"1 fattura attiva per sempre",pl1f3:"Promemoria automatici",pl1f4:"Archiviazione sicura",pl1b:"Inizia gratuitamente",
+  pm:"/mese",pm2:"/mese",pm3:"/mese",pm4:"/mese",
+  pl2n:"Individuale",pl2lim:"8 fatture al mese",pl2d:"Per chi vuole smettere di perdere soldi.",pl2f1:"8 fatture/mese",pl2f2:"Archivio completo",pl2f3:"Promemoria intelligenti",pl2f4:"1 account, 1 dispositivo",pl2f5:"1 fattura attiva se annulli",pl2b:"Unisciti alla lista",
+  pop_b:"⭐ Il più popolare",
+  pl3n:"Famiglia",pl3lim:"30 fatture/mese · 4 membri",pl3d:"Per tutta la famiglia — un solo abbonamento.",pl3f1:"30 fatture/mese",pl3f2:"Fino a 4 membri",pl3f3:"Fatture condivise",pl3f4:"Dashboard comune",pl3f5:"1 fattura per membro se annulli",pl3b:"Unisciti alla lista",
+  pl4n:"Piccola azienda",pl4lim:"70 fatture al mese",pl4d:"Per freelance e piccoli team.",pl4f1:"70 fatture/mese",pl4f2:"Admin + 3 sotto-account",pl4f3:"Export PDF & storico",pl4f4:"Ricerca avanzata",pl4f5:"1 fattura attiva se annulli",pl4b:"Unisciti alla lista",
+  pl5n:"Grande azienda",pl5lim:"200 fatture al mese",pl5d:"Per aziende con alto volume.",pl5f1:"200 fatture/mese",pl5f2:"Admin + 10 sotto-account",pl5f3:"Export & contabilità",pl5f4:"Supporto prioritario",pl5f5:"1 fattura attiva se annulli",pl5b:"Unisciti alla lista",
+  pay_lbl:"METODI DI PAGAMENTO ACCETTATI",pay1:"Carta di credito / debito",pay3:"Bonifico bancario",pay_note:"🔒 Pagamenti 100% sicuri · Annulla quando vuoi · Nessun impegno",
+  cta_h:"Pronto a smettere di perdere soldi?",cta_s:"Unisciti ai primi utenti di eazy in Svizzera. Gratuito per iniziare.",cta_b:"Voglio scoprire eazy",
+  join_h:"Prova eazy gratuitamente.",join_s:"Nessuna carta di credito. Nessun impegno. Inizia con 10 fatture gratuite.",join_btn:"Unisciti gratuitamente",join_note:"🔒 Nessuno spam · Nessuna carta richiesta · Annulla quando vuoi",
+  foot:"© 2026 eazy – Fatto con ❤️ in Svizzera",f_privacy:"Privacy",f_contact:"Contatto"
+}
+};
+
+let lang='fr';
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang').forEach(b=>b.classList.remove('on'));
+  document.querySelector(`.lang[onclick="setLang('${l}')"]`).classList.add('on');
+  const d=T[l];
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const k=el.getAttribute('data-t');
+    if(d[k]!==undefined)el.textContent=d[k];
+  });
+  document.querySelectorAll('[data-t-ph]').forEach(el=>{
+    const k=el.getAttribute('data-t-ph');
+    if(d[k])el.placeholder=d[k];
+  });
+  const sel=document.getElementById('f_pr');
+  if(sel&&d.op0){sel.options[0].text=d.op0;sel.options[1].text=d.op1;sel.options[2].text=d.op2;sel.options[3].text=d.op3;sel.options[4].text=d.op4;}
+}
+
+function scrollToSignup(){document.getElementById('signup').scrollIntoView({behavior:'smooth'})}
+
+/* ── PROGRESS BAR ── */
+function updateProgress(){
+  const fields=[
+    document.getElementById('f_fn').value.trim(),
+    document.getElementById('f_ln').value.trim(),
+    document.getElementById('f_em').value.trim(),
+    document.getElementById('f_ph').value.trim(),
+    document.getElementById('f_pr').value
+  ];
+  const filled=fields.filter(v=>v.length>0).length;
+  const pct=Math.round((filled/fields.length)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-pct').textContent=pct+'%';
+}
+
+/* ── LIVE COUNTER ── */
+(function(){
+  let base=247;
+  setInterval(()=>{
+    const delta=Math.random()>.5?1:-1;
+    base=Math.max(230,Math.min(280,base+delta));
+    const el=document.getElementById('live-txt');
+    if(el){
+      const lang_map={fr:`${base} personnes regardent cette page en ce moment`,de:`${base} Personen schauen gerade auf diese Seite`,en:`${base} people are viewing this page right now`,it:`${base} persone stanno guardando questa pagina ora`};
+      el.textContent=lang_map[lang]||lang_map.fr;
+    }
+  },4500);
+})();
+
+/* ── JOINED COUNT fluctuation ── */
+(function(){
+  let base=1247;
+  setInterval(()=>{
+    base+=Math.floor(Math.random()*3);
+    const el=document.getElementById('joined-count');
+    if(el)el.textContent=base.toLocaleString('fr-CH');
+  },7000);
+})();
+
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainnav').classList.toggle('scrolled',window.scrollY>40);
+},{passive:true});
+
+/* ── SUBMIT ── */
+function doSubmit(){
+  const fn=document.getElementById('f_fn').value.trim();
+  const em=document.getElementById('f_em').value.trim();
+  const err=document.getElementById('err');
+  if(!fn||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){err.style.display='block';return;}
+  err.style.display='none';
+  try{
+    const leads=JSON.parse(localStorage.getItem('eazy_leads')||'[]');
+    leads.push({name:fn+' '+document.getElementById('f_ln').value.trim(),email:em,phone:document.getElementById('f_ph').value.trim(),profile:document.getElementById('f_pr').value,lang:lang,date:new Date().toISOString()});
+    localStorage.setItem('eazy_leads',JSON.stringify(leads));
+  }catch(e){}
+  document.getElementById('fc').style.display='none';
+  document.getElementById('ok').style.display='block';
+}
+</script>
+</body>
+</html>
