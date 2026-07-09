@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Gérer mon abonnement — eazy</title>
+<style>
+  :root {
+    --mint: #00C896;
+    --mint-light: #E6FBF3;
+    --dark: #0B1120;
+    --mid: #4A5878;
+    --light: #8A96B0;
+    --bg: #F4F7F6;
+    --border: #E2EBE7;
+    --red: #FF4B4B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 22px;
+    padding: 36px 28px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 8px 30px rgba(11,17,32,0.08);
+    text-align: center;
+  }
+  .logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    font-size: 26px;
+  }
+  h1 {
+    font-size: 22px;
+    font-weight: 900;
+    margin: 0 0 8px;
+  }
+  p.subtitle {
+    color: var(--mid);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 26px;
+  }
+  input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 15px;
+    margin-bottom: 14px;
+    background: var(--bg);
+    color: var(--dark);
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--mint);
+    background: #fff;
+  }
+  button {
+    width: 100%;
+    background: var(--mint);
+    color: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  button:hover { opacity: 0.9; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .message {
+    margin-top: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: none;
+  }
+  .message.error { color: var(--red); display: block; }
+  .message.info { color: var(--mid); display: block; }
+  .footer-note {
+    margin-top: 22px;
+    font-size: 12px;
+    color: var(--light);
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">😊</div>
+    <h1>Gérer mon abonnement</h1>
+    <p class="subtitle">Entre l'adresse email de ton compte eazy pour accéder à ton espace de gestion d'abonnement sécurisé (changement de moyen de paiement, factures, résiliation).</p>
+
+    <input type="email" id="emailInput" placeholder="ton@email.com" autocomplete="email" />
+    <button id="submitBtn" onclick="openPortal()">Accéder à mon abonnement</button>
+
+    <div class="message" id="messageBox"></div>
+
+    <p class="footer-note">🔒 Connexion sécurisée fournie par Stripe. Un souci ? Écris-nous à eazysmile.ch@gmail.com</p>
+  </div>
+
+  <script>
+    // ⚠️ Remplace cette URL par l'URL réelle de ta fonction une fois déployée.
+    // Format attendu : https://racskypzqyphrixjbasf.supabase.co/functions/v1/create-portal-session
+    const FUNCTION_URL = 'https://racskypzqyphrixjbasf.supabase.co/functions/v1/create-portal-session';
+
+    async function openPortal() {
+      const emailInput = document.getElementById('emailInput');
+      const btn = document.getElementById('submitBtn');
+      const messageBox = document.getElementById('messageBox');
+      const email = emailInput.value.trim();
+
+      messageBox.className = 'message';
+      messageBox.textContent = '';
+
+      if (!email || !email.includes('@')) {
+        messageBox.className = 'message error';
+        messageBox.textContent = 'Merci d\'entrer une adresse email valide.';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Chargement...';
+
+      try {
+        const response = await fetch(FUNCTION_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          messageBox.className = 'message error';
+          messageBox.textContent = data.error || 'Une erreur est survenue. Réessaie ou écris-nous.';
+          btn.disabled = false;
+          btn.textContent = 'Accéder à mon abonnement';
+          return;
+        }
+
+        messageBox.className = 'message info';
+        messageBox.textContent = 'Redirection en cours...';
+        window.location.href = data.url;
+      } catch (e) {
+        messageBox.className = 'message error';
+        messageBox.textContent = 'Erreur de connexion. Vérifie ta connexion internet et réessaie.';
+        btn.disabled = false;
+        btn.textContent = 'Accéder à mon abonnement';
+      }
+    }
+
+    document.getElementById('emailInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') openPortal();
+    });
+  </script>
+</body>
+</html>
