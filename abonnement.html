@@ -223,6 +223,19 @@
 
   <p class="footer-note">Paiement sécurisé par Stripe · Carte bancaire ou Twint · Tu recevras un email de confirmation</p>
 
+  <div id="successOverlay" style="display:none; position:fixed; inset:0; background:rgba(11,17,32,.55); align-items:center; justify-content:center; padding:20px; z-index:999;">
+    <div style="background:#fff; border-radius:22px; padding:36px 28px; max-width:380px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(11,17,32,.3);">
+      <div style="width:64px; height:64px; border-radius:50%; background:#E6FBF3; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:32px;">✅</div>
+      <h2 style="font-size:20px; font-weight:900; color:#0B1120; margin-bottom:10px;">Merci, c'est activé !</h2>
+      <p style="font-size:14px; color:#4A5878; line-height:1.5; margin-bottom:24px;">
+        Ton abonnement eazy est bien confirmé. Tu peux retourner sur l'application et continuer à ajouter tes factures sans limite.
+      </p>
+      <button onclick="document.getElementById('successOverlay').style.display='none'" style="background:#00C896; color:#fff; border:none; border-radius:14px; padding:14px 28px; font-size:14.5px; font-weight:800; cursor:pointer; width:100%;">
+        Parfait, fermer
+      </button>
+    </div>
+  </div>
+
   <script>
     const SUPABASE_URL = 'https://racskypzqyphrixjbasf.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJhY3NreXB6cXlwaHJpeGpiYXNmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5OTEwODgsImV4cCI6MjA5NzU2NzA4OH0.az31U8wWWINKkdgUzvyTQ-Z0348HsfXhhGxog82zvs4';
@@ -260,6 +273,13 @@
         btnEl.textContent = originalText;
       }
     }
+
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('success') === '1') {
+        document.getElementById('successOverlay').style.display = 'flex';
+      }
+    })();
   </script>
 
 </body>
