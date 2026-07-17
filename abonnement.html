@@ -188,7 +188,7 @@
         <li>Rappels automatiques</li>
         <li>Archives à vie</li>
       </ul>
-      <button class="plan-btn" onclick="subscribe('solo', this)">Choisir Individuel</button>
+      <button class="plan-btn" data-plan="solo" onclick="subscribe('solo', this)">Choisir Individuel</button>
     </div>
 
     <div class="plan-card featured">
@@ -201,7 +201,7 @@
         <li>Rappels automatiques</li>
         <li>Archives à vie</li>
       </ul>
-      <button class="plan-btn" onclick="subscribe('family', this)">Choisir Famille</button>
+      <button class="plan-btn" data-plan="family" onclick="subscribe('family', this)">Choisir Famille</button>
     </div>
 
     <div class="plan-card">
@@ -214,7 +214,7 @@
         <li>Rappels automatiques</li>
         <li>Archives à vie</li>
       </ul>
-      <button class="plan-btn" onclick="subscribe('small', this)">Choisir Petite entreprise</button>
+      <button class="plan-btn" data-plan="small" onclick="subscribe('small', this)">Choisir Petite entreprise</button>
     </div>
 
     <div class="plan-card">
@@ -227,7 +227,7 @@
         <li>Rappels automatiques</li>
         <li>Archives à vie</li>
       </ul>
-      <button class="plan-btn" onclick="subscribe('large', this)">Choisir Grande entreprise</button>
+      <button class="plan-btn" data-plan="large" onclick="subscribe('large', this)">Choisir Grande entreprise</button>
     </div>
 
   </div>
@@ -301,15 +301,16 @@
       const preselectedPlan = params.get('plan');
       const validPlans = ['solo', 'family', 'small', 'large'];
       if (preselectedPlan && validPlans.includes(preselectedPlan)) {
-        const targetButton = document.querySelector(`.plan-btn[onclick*="'${preselectedPlan}'"]`);
+        const targetButton = document.querySelector('.plan-btn[data-plan="' + preselectedPlan + '"]');
         if (targetButton) {
-          // Mise en évidence visuelle brève avant la redirection automatique
           const card = targetButton.closest('.plan-card');
           if (card) {
             card.style.borderColor = '#00C896';
             card.style.transform = 'scale(1.02)';
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
-          setTimeout(() => subscribe(preselectedPlan, targetButton), 400);
+          targetButton.textContent = 'Redirection vers le paiement...';
+          setTimeout(() => subscribe(preselectedPlan, targetButton), 600);
         }
       }
     })();
