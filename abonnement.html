@@ -181,7 +181,7 @@
     <div class="plan-card">
       <div class="plan-name">Individuel</div>
       <div class="plan-desc">Pour gérer tes factures perso, sans limite basse.</div>
-      <div class="plan-price">CHF 12<span>/mois</span></div>
+      <div class="plan-price">CHF 12.-<span>/mois</span></div>
       <ul class="plan-features">
         <li>8 factures par mois</li>
         <li>1 membre</li>
@@ -194,7 +194,7 @@
     <div class="plan-card featured">
       <div class="plan-name">Famille</div>
       <div class="plan-desc">Pour gérer les factures de tout le foyer, ensemble.</div>
-      <div class="plan-price">CHF 25<span>/mois</span></div>
+      <div class="plan-price">CHF 25.-<span>/mois</span></div>
       <ul class="plan-features">
         <li>30 factures par mois</li>
         <li>4 membres</li>
@@ -207,7 +207,7 @@
     <div class="plan-card">
       <div class="plan-name">Petite entreprise</div>
       <div class="plan-desc">Pour les indépendants et petites structures.</div>
-      <div class="plan-price">CHF 49<span>/mois</span></div>
+      <div class="plan-price">CHF 49.-<span>/mois</span></div>
       <ul class="plan-features">
         <li>200 factures par mois</li>
         <li>4 membres</li>
@@ -220,7 +220,7 @@
     <div class="plan-card">
       <div class="plan-name">Grande entreprise</div>
       <div class="plan-desc">Pour les équipes avec un gros volume de factures.</div>
-      <div class="plan-price">CHF 69<span>/mois</span></div>
+      <div class="plan-price">CHF 69.-<span>/mois</span></div>
       <ul class="plan-features">
         <li>1000 factures par mois</li>
         <li>6 membres</li>
@@ -294,6 +294,23 @@
       const params = new URLSearchParams(window.location.search);
       if (params.get('success') === '1') {
         document.getElementById('successOverlay').style.display = 'flex';
+      }
+
+      // Si le client arrive depuis l'email avec un plan déjà choisi, on lance
+      // directement le paiement de ce plan, sans lui redemander de choisir.
+      const preselectedPlan = params.get('plan');
+      const validPlans = ['solo', 'family', 'small', 'large'];
+      if (preselectedPlan && validPlans.includes(preselectedPlan)) {
+        const targetButton = document.querySelector(`.plan-btn[onclick*="'${preselectedPlan}'"]`);
+        if (targetButton) {
+          // Mise en évidence visuelle brève avant la redirection automatique
+          const card = targetButton.closest('.plan-card');
+          if (card) {
+            card.style.borderColor = '#00C896';
+            card.style.transform = 'scale(1.02)';
+          }
+          setTimeout(() => subscribe(preselectedPlan, targetButton), 400);
+        }
       }
     })();
   </script>
