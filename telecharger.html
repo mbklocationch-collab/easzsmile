@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Télécharger eazy — Tes factures, enfin sous contrôle</title>
+<meta name="description" content="eazy, l'app suisse qui gère tes factures à ta place. Disponible gratuitement sur l'App Store.">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    background: linear-gradient(180deg, #F4F7F6 0%, #E6FBF3 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 28px;
+    padding: 40px 28px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 12px 40px rgba(11,17,32,0.1);
+    text-align: center;
+  }
+  .logo {
+    width: 84px;
+    height: 84px;
+    background: #0B1120;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 38px;
+  }
+  h1 { font-size: 26px; color: #0B1120; font-weight: 900; margin-bottom: 8px; }
+  p.tagline { font-size: 15px; color: #8A96B0; margin-bottom: 28px; line-height: 1.5; }
+  .features { text-align: left; margin-bottom: 28px; }
+  .feature { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 14px; color: #4A5878; }
+  .feature-icon { font-size: 20px; }
+  .download-btn {
+    display: block;
+    background: #00C896;
+    color: #fff;
+    text-decoration: none;
+    padding: 18px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 20px rgba(0,200,150,0.35);
+  }
+  .footer-note { font-size: 12px; color: #8A96B0; margin-top: 24px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">🙂</div>
+    <h1>eazy</h1>
+    <p class="tagline">Tes factures, enfin sous contrôle.<br>Photo automatique, rappels intelligents, archives à vie.</p>
+
+    <div class="features">
+      <div class="feature"><span class="feature-icon">📸</span> Photo automatique de tes factures</div>
+      <div class="feature"><span class="feature-icon">🔔</span> Rappels avant chaque échéance</div>
+      <div class="feature"><span class="feature-icon">📁</span> Archives à vie, retrouvées en 2 secondes</div>
+      <div class="feature"><span class="feature-icon">🇨🇭</span> Application 100% suisse</div>
+    </div>
+
+    <a class="download-btn" id="downloadLink" href="https://apps.apple.com/ch/app/eazy-factures/id6789912531">
+      📲 Télécharger sur l'App Store
+    </a>
+
+    <p class="footer-note">Disponible gratuitement · FR / EN / DE / IT / ES / PT</p>
+  </div>
+
+  <script>
+    window.location.href = document.getElementById('downloadLink').href;
+  </script>
+</body>
+</html>
