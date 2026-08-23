@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="background:yellow; padding:40px; font-size:24px; font-family:Arial;">
+  <p id="texte">SI TU VOIS CECI EN JAUNE, LE FICHIER SE MET À JOUR CORRECTEMENT.</p>
+  <p id="resultat" style="color:red; font-weight:bold;">Le JavaScript n'a pas encore tourné...</p>
+  <script>
+    document.getElementById('resultat').textContent = '✅ LE JAVASCRIPT FONCTIONNE — Heure : ' + new Date().toLocaleTimeString();
+  </script>
+</body>
+</html>
